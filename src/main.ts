@@ -1,7 +1,7 @@
-import { Gine, Config } from 'gine';
+import { Gine, Config, SCENE_EMPTY } from "gine";
 
 const cfg: Config = {
-  canvas: <HTMLCanvasElement>document.querySelector('#game'),
+  canvas: <HTMLCanvasElement>document.querySelector("#game"),
   height: 400,
   maxFps: 60,
   tickRate: 110,

@@ -15,5 +15,7 @@
     "parcel": "^1.9.7",
     "typescript": "^3.0.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "gine": "^2.1.0"
+  }
 }
