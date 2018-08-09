@@ -16,6 +16,6 @@
     "typescript": "^3.0.1"
   },
   "dependencies": {
-    "gine": "^2.1.0"
+    "gine": "^2.2.0"
   }
 }
