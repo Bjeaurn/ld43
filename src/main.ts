@@ -1,7 +1,14 @@
 import { Gine, Config } from 'gine';
 
-const config: Config = new Config(600, 400, document.getElementById('game') as HTMLCanvasElement);
+const cfg: Config = {
+  canvas: <HTMLCanvasElement>document.querySelector('#game'),
+  height: 400,
+  maxFps: 60,
+  tickRate: 110,
+  tileSize: 16,
+  usesTiles: true,
+  width: 600
+};
 
-const game = new Gine(config);
-console.log(game);
+const game = new Gine(cfg);
 game.start();
