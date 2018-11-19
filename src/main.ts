@@ -1,4 +1,4 @@
-import { Gine, Config, SCENE_EMPTY, GineAsset, DEFAULT_CONFIG } from 'gine'
+import { Gine, Config, GineAsset, DEFAULT_CONFIG } from 'gine'
 
 import { LoadingScene } from './scenes/loading'
 const cfg: Config = new Config(
@@ -9,9 +9,13 @@ const cfg: Config = new Config(
 const game = new Gine(cfg)
 
 const assets: any[] = [{ name: 'logo', src: 'logo.png' }]
+assets.forEach(d => {
+  Gine.store.image(d.name, d.src)
+})
 
-const loadingScene = LoadingScene
-loadingScene.parse(assets)
+const loadingScene = new LoadingScene()
 
 game.changeScene(loadingScene)
 game.start()
+
+Gine.events.events.subscribe(ev => console.log(ev))

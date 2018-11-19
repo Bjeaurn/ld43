@@ -12,7 +12,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "gine": "^3.0.0",
     "parcel": "^1.9.7",
     "parcel-plugin-static-files-copy": "^1.1.0",
     "typescript": "^3.0.1"

@@ -1,25 +1,20 @@
-import { Gine, IScene } from 'gine'
+import { Gine, IScene, Scene, ImageAsset } from 'gine'
 
-export const LoadingScene: IScene = {
-  count: 0,
-  total: 0,
-  x: 0,
-  y: 0,
-  directionX: 1,
-  directionY: 1,
-  parse(data: any[]) {
-    this.total = data.length
-    data.forEach(d => {
-      Gine.store.image(d.name, d.src)
-      this.count++
-      if (this.count === this.total) {
-        // this.destroy();
-        console.log('done')
-      }
-    })
-  },
+export class LoadingScene extends Scene {
+  x: number = 0
+  y: number = 0
+  directionX: number = 1
+  directionY: number = 1
+  image: ImageAsset
+  count: number = 0
+
+  constructor() {
+    super()
+    this.image = Gine.store.get('logo') as ImageAsset
+  }
+
   tick() {
-    if (this.x > Gine.CONFIG.width - Gine.store.get('logo').width) {
+    if (this.x > Gine.CONFIG.width - this.image.width) {
       this.directionX = 0
     } else if (this.x < 0) {
       this.directionX = 1
@@ -31,7 +26,7 @@ export const LoadingScene: IScene = {
       this.x--
     }
 
-    if (this.y > Gine.CONFIG.height - Gine.store.get('logo').height) {
+    if (this.y > Gine.CONFIG.height - this.image.height) {
       this.directionY = 0
     } else if (this.y < 0) {
       this.directionY = 1
@@ -42,7 +37,13 @@ export const LoadingScene: IScene = {
     } else {
       this.y--
     }
-  },
+
+    if (this.count > 1000) {
+      this.destroy()
+      this.count = 0
+    }
+  }
+
   frame() {
     Gine.handle.handle.strokeStyle = 'white'
     Gine.handle.handle.strokeRect(
@@ -52,8 +53,6 @@ export const LoadingScene: IScene = {
       Gine.CONFIG.viewport.maxY
     )
     Gine.handle.draw(Gine.store.get('logo'), this.x, this.y)
-    // Gine.handle.text('Bliep bloep', 20, 20);
-  },
-  second() {},
-  destroy() {}
+    this.count++
+  }
 }
