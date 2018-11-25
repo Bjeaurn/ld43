@@ -17,6 +17,7 @@
     "typescript": "^3.0.1"
   },
   "dependencies": {
-    "fs": "0.0.1-security"
+    "fs": "0.0.1-security",
+    "gine": "^3.2.0"
   }
 }

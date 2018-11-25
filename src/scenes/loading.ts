@@ -1,4 +1,4 @@
-import { Gine, IScene, Scene, ImageAsset } from 'gine'
+import { Gine, IScene, Scene, ImageAsset, SpriteAsset } from 'gine'
 
 export class LoadingScene extends Scene {
   x: number = 0
@@ -6,11 +6,13 @@ export class LoadingScene extends Scene {
   directionX: number = 1
   directionY: number = 1
   image: ImageAsset
+  test: SpriteAsset
   count: number = 0
 
   constructor() {
     super()
     this.image = Gine.store.get('logo') as ImageAsset
+    this.test = Gine.store.get('player') as SpriteAsset
   }
 
   tick() {
@@ -39,20 +41,15 @@ export class LoadingScene extends Scene {
     }
 
     if (this.count > 1000) {
-      this.destroy()
+      // this.destroy()
       this.count = 0
     }
+    this.test.update()
   }
 
   frame() {
-    Gine.handle.handle.strokeStyle = 'white'
-    Gine.handle.handle.strokeRect(
-      0,
-      0,
-      Gine.CONFIG.viewport.maxX,
-      Gine.CONFIG.viewport.maxY
-    )
     Gine.handle.draw(Gine.store.get('logo'), this.x, this.y)
+    Gine.handle.drawSprite(this.test, 200, 200)
     this.count++
   }
 }
