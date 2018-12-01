@@ -23,7 +23,9 @@ const assets: any[] = [
   { name: 'dirt', src: 'dirt.png' },
   { name: 'tree', src: 'tree.png' },
   { name: 'fence', src: 'fence.png' },
-  { name: 'guard', src: 'guard-gun.png' }
+  { name: 'guard', src: 'guard-gun.png' },
+  { name: 'player-dead', src: 'player-dead.png' },
+  { name: 'guard-aiming', src: 'guard-gun-aiming.png' }
 ]
 
 assets.forEach(d => {

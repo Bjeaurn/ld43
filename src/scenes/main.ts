@@ -1,4 +1,4 @@
-import { Scene, ImageAsset, Gine, KEYCODES, Tile } from 'gine'
+import { Scene, ImageAsset, Gine, KEYCODES, Tile, Font } from 'gine'
 import { Player } from '../player'
 import { MapManager } from '../map'
 import { Util } from '../util'
@@ -10,6 +10,7 @@ export class MainScene extends Scene {
   guards: Guard[] = []
   map: MapManager
   tiles: { x: number; y: number }
+  alpha: number = 0
 
   constructor() {
     super()
@@ -29,7 +30,13 @@ export class MainScene extends Scene {
         { task: MOVE, x: 400, y: 24 },
         { task: HOLD, time: 5, direction: 180 },
         { task: MOVE, x: 80, y: 24 },
-        { task: HOLD, time: 5, direction: 180}
+        { task: HOLD, time: 5, direction: 180 }
+      ]),
+      new Guard(16, 112, 90, [
+        { task: HOLD, time: 4, direction: 90 },
+        { task: MOVE, x: 16, y: 312 },
+        { task: HOLD, time: 6, direction: 90 },
+        { task: MOVE, x: 16, y: 112 }
       ])
     )
     const arr = new Array(this.tiles.x * this.tiles.y)
@@ -53,6 +60,9 @@ export class MainScene extends Scene {
       this.player.updateTick(delta, false)
     }
     this.guards.forEach(g => g.update(delta))
+    if (!this.player.alive && this.alpha < 0.9) {
+      this.alpha += delta
+    }
   }
 
   frame() {
@@ -64,6 +74,15 @@ export class MainScene extends Scene {
       this.player.y,
       this.player.direction
     )
+    if (!this.player.alive) {
+      Gine.handle.setFont(new Font('Helvetica', 40))
+      Gine.handle.setColor(255, 0, 0, this.alpha)
+      Gine.handle.text(
+        'YOU DIED',
+        Gine.CONFIG.width / 2 - 80,
+        Gine.CONFIG.height / 2
+      )
+    }
     // Gine.handle.draw(this.player.image, this.player.x, this.player.y)
   }
 }

@@ -1,4 +1,4 @@
-import { NPC } from './npc'
+import { NPC, calculateMoveVector } from './npc'
 
 export type Task = {
   task: string
@@ -30,28 +30,4 @@ export class TaskHandler {
         break
     }
   }
-}
-
-export function calculateMoveVector(
-  sX: number,
-  sY: number,
-  dX: number,
-  dY: number
-): string[] {
-  const diffX = dX - sX
-  const diffY = dY - sY
-  let direction: string[] = []
-  if (diffX > 0) {
-    direction.push('EAST')
-  }
-  if (diffX < 0) {
-    direction.push('WEST')
-  }
-  if (diffY < 0) {
-    direction.push('NORTH')
-  }
-  if (diffY > 0) {
-    direction.push('SOUTH')
-  }
-  return direction
 }

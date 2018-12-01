@@ -8,16 +8,21 @@ export class Player {
   image: ImageAsset
   moveSpeed: number = 20
   canMove: boolean[] = [true, true, true, true]
-
+  alive: boolean = true
   constructor() {
     this.x = 0
     this.y = 0
     this.setLastPosition()
-    this.image = Gine.store.get('player') as ImageAsset
+    this.image = Gine.store.get('player')
   }
 
   private setLastPosition() {
     this.lastPos = { x: this.x, y: this.y }
+  }
+
+  hit() {
+    this.alive = false
+    this.image = Gine.store.get('player-dead')
   }
 
   resetLastPosition() {
@@ -26,26 +31,32 @@ export class Player {
   }
 
   updateTick(delta: number, isCollided: boolean = false) {
-    if (!isCollided) {
-      this.setLastPosition()
-    } else {
-      this.resetLastPosition()
-    }
-    if (Gine.keyboard.isPressed(KEYCODES.A)) {
-      this.x -= this.moveSpeed * delta
-      this.direction = 270
-    }
-    if (Gine.keyboard.isPressed(KEYCODES.D)) {
-      this.x += this.moveSpeed * delta
-      this.direction = 90
-    }
-    if (Gine.keyboard.isPressed(KEYCODES.S)) {
-      this.y += this.moveSpeed * delta
-      this.direction = 180
-    }
-    if (Gine.keyboard.isPressed(KEYCODES.W)) {
-      this.y -= this.moveSpeed * delta
-      this.direction = 0
+    if (this.alive) {
+      if (!isCollided) {
+        this.setLastPosition()
+      } else {
+        this.resetLastPosition()
+      }
+      let direction = []
+      if (Gine.keyboard.isPressed(KEYCODES.A)) {
+        this.x -= this.moveSpeed * delta
+        direction.push(270)
+      }
+      if (Gine.keyboard.isPressed(KEYCODES.D)) {
+        this.x += this.moveSpeed * delta
+        direction.push(90)
+      }
+      if (Gine.keyboard.isPressed(KEYCODES.S)) {
+        this.y += this.moveSpeed * delta
+        direction.push(180)
+      }
+      if (Gine.keyboard.isPressed(KEYCODES.W)) {
+        this.y -= this.moveSpeed * delta
+        direction.push(360)
+      }
+      if (direction.length > 0) {
+        this.direction = direction.reduce((p, c) => p + c, 0) / direction.length
+      }
     }
   }
 

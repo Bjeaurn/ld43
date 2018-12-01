@@ -26,6 +26,18 @@ export class NPC implements INPC {
     this.id = NPC.add(this)
   }
 
+  faceTo(x: number, y: number) {
+    const m = Math.atan2(this.y - y, this.x - x)
+    const direction = Math.round((m * 180) / Math.PI) + 270
+    this.direction = direction
+  }
+
+  distanceTo(x: number, y: number): number {
+    const a = x - this.x
+    const b = y - this.y
+    return Math.floor(Math.sqrt(a * a + b * b))
+  }
+
   isInVicinity(x: number, y: number, range: number): boolean {
     if (
       x <= this.x + range &&
@@ -45,4 +57,29 @@ export class NPC implements INPC {
 export interface INPC {
   update(delta: number): void
   nextTask(): void
+}
+
+// FIXME Promote to the engine.
+export function calculateMoveVector(
+  sX: number,
+  sY: number,
+  dX: number,
+  dY: number
+): string[] {
+  const diffX = Math.round(dX - sX)
+  const diffY = Math.round(dY - sY)
+  let direction: string[] = []
+  if (diffX > 0) {
+    direction.push('EAST')
+  }
+  if (diffX < 0) {
+    direction.push('WEST')
+  }
+  if (diffY < 0) {
+    direction.push('NORTH')
+  }
+  if (diffY > 0) {
+    direction.push('SOUTH')
+  }
+  return direction
 }

@@ -1,5 +1,6 @@
 import { ImageAsset, Gine } from 'gine'
 
+// FIXME Promote to the engine.
 export class Util {
   static rotate(
     image: ImageAsset,
