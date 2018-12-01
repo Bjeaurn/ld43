@@ -3,7 +3,7 @@ import { ImageAsset, Gine, KEYCODES } from 'gine'
 export class Player {
   x: number
   y: number
-  lastPos: { x: number; y: number } = {}
+  lastPos: { x: number; y: number } = { x: 0, y: 0 }
   image: ImageAsset
   moveSpeed: number = 20
   canMove: boolean[] = [true, true, true, true]
