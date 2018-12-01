@@ -4,6 +4,7 @@ import { MapManager } from '../map'
 import { Util } from '../util'
 import { Guard } from '../guard'
 import { MOVE, HOLD } from '../task'
+import { Dialog } from '../dialog'
 
 export class MainScene extends Scene {
   player: Player
@@ -11,7 +12,8 @@ export class MainScene extends Scene {
   map: MapManager
   tiles: { x: number; y: number }
   alpha: number = 0
-
+  seconds: number = 0
+  dialogOn: boolean = false
   constructor() {
     super()
     this.player = Gine.store.get('player')
@@ -19,6 +21,14 @@ export class MainScene extends Scene {
     this.tiles = {
       x: Math.ceil(Gine.CONFIG.width / Gine.CONFIG.tileSize),
       y: Math.ceil(Gine.CONFIG.height / Gine.CONFIG.tileSize)
+    }
+  }
+
+  second() {
+    this.seconds++
+    if (this.seconds > 6 && !this.dialogOn) {
+      this.dialogOn = true
+      new Dialog('Cyka blyat idi nahui', false, 10)
     }
   }
 
@@ -63,6 +73,7 @@ export class MainScene extends Scene {
     if (!this.player.alive && this.alpha < 0.9) {
       this.alpha += delta
     }
+    Dialog.handleUpdate(delta)
   }
 
   frame() {
@@ -83,6 +94,7 @@ export class MainScene extends Scene {
         Gine.CONFIG.height / 2
       )
     }
+    Dialog.handleDraw()
     // Gine.handle.draw(this.player.image, this.player.x, this.player.y)
   }
 }

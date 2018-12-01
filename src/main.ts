@@ -25,7 +25,11 @@ const assets: any[] = [
   { name: 'fence', src: 'fence.png' },
   { name: 'guard', src: 'guard-gun.png' },
   { name: 'player-dead', src: 'player-dead.png' },
-  { name: 'guard-aiming', src: 'guard-gun-aiming.png' }
+  { name: 'guard-aiming', src: 'guard-gun-aiming.png' },
+  { name: 'dialog-left', src: 'dialog-left.png' },
+  { name: 'dialog-main', src: 'dialog-main.png' },
+  { name: 'dialog-right', src: 'dialog-right.png' },
+  { name: 'guard-fire', src: 'guard-gun-fire.png' },
 ]
 
 assets.forEach(d => {

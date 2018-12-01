@@ -28,8 +28,11 @@ export class Guard extends NPC {
     this.faceTo(player.x, player.y)
     if (this.distanceTo(player.x, player.y) <= this.shootingRange) {
       this.timer += delta
-      if (this.timer >= this.aggressiveness) {
-        player.hit()
+      if (this.timer >= this.aggressiveness - 0.2) {
+        this.image = Gine.store.get('guard-fire')
+        if (this.timer >= this.aggressiveness) {
+          player.hit()
+        }
       }
     }
     // } else {
