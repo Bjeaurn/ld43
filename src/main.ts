@@ -25,6 +25,7 @@ const assets: any[] = [
   { name: 'fence', src: 'fence.png' },
   { name: 'guard', src: 'guard-gun.png' }
 ]
+
 assets.forEach(d => {
   Gine.store.image(d.name, d.src)
 })

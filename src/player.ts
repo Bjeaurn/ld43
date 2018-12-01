@@ -3,6 +3,7 @@ import { ImageAsset, Gine, KEYCODES } from 'gine'
 export class Player {
   x: number
   y: number
+  direction: number = 0
   lastPos: { x: number; y: number } = { x: 0, y: 0 }
   image: ImageAsset
   moveSpeed: number = 20
@@ -32,15 +33,19 @@ export class Player {
     }
     if (Gine.keyboard.isPressed(KEYCODES.A)) {
       this.x -= this.moveSpeed * delta
+      this.direction = 270
     }
     if (Gine.keyboard.isPressed(KEYCODES.D)) {
       this.x += this.moveSpeed * delta
+      this.direction = 90
     }
     if (Gine.keyboard.isPressed(KEYCODES.S)) {
       this.y += this.moveSpeed * delta
+      this.direction = 180
     }
     if (Gine.keyboard.isPressed(KEYCODES.W)) {
       this.y -= this.moveSpeed * delta
+      this.direction = 0
     }
   }
 

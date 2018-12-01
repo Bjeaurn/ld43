@@ -1,20 +1,22 @@
 import { ImageAsset, Gine } from 'gine'
 
 export class Util {
-  static rotate(image: ImageAsset, degrees: number = 0): ImageAsset {
-    var radians = (degrees * Math.PI) / 180
+  static rotate(
+    image: ImageAsset,
+    x: number,
+    y: number,
+    degrees: number = 0
+  ): void {
+    const radians = (degrees * Math.PI) / 180
     Gine.handle.handle.save()
+    Gine.handle.handle.translate(x, y)
     Gine.handle.handle.rotate(radians)
-    Gine.handle.handle.drawImage(image.image, 0, 0)
-    const newImage = Gine.handle.handle.getImageData(
-      0,
-      0,
-      image.width,
-      image.height
+    Gine.handle.handle.drawImage(
+      image.image,
+      0 - image.width / 2,
+      0 - image.height / 2
     )
-    image.image = newImage as any
     Gine.handle.handle.restore()
-    return image
   }
 
   static collision(source: CollisionObject, dest: CollisionObject): boolean {
