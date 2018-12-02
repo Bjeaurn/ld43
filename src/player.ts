@@ -8,7 +8,7 @@ export class Player {
   direction: number = 0
   lastPos: { x: number; y: number } = { x: 0, y: 0 }
   image: ImageAsset
-  moveSpeed: number = 20
+  moveSpeed: number = 30
   canMove: boolean[] = [true, true, true, true]
   controlsEnabled: boolean = true
   alive: boolean = true

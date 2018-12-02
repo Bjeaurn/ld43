@@ -11,6 +11,7 @@ export class Scene000 extends Scene {
   map: MapManager
   tiles: { x: number; y: number }
   seenDialog: boolean = false
+  secondsWaited: number = 0
   constructor() {
     super()
     this.player = Gine.store.get('player')
@@ -23,7 +24,7 @@ export class Scene000 extends Scene {
 
   init() {
     new Dialog(
-      'Hello there everybody!\n How are you doing today?\n Are you having a good time?',
+      "What's that noise outside?\nI better check it out!\n(Press ENTER to dismiss dialog)",
       true
     )
     const arr = new Array(this.tiles.x * this.tiles.y)
@@ -61,6 +62,16 @@ export class Scene000 extends Scene {
   }
 
   second() {
+    if (this.player.controlsEnabled) {
+      this.secondsWaited++
+      if (
+        this.secondsWaited === 3 &&
+        this.player.x === 6 * Gine.CONFIG.tileSize + 16 &&
+        this.player.y === 4 * Gine.CONFIG.tileSize + 8
+      ) {
+        new Dialog('(Use WSAD to move)', true)
+      }
+    }
     const currentTile = this.map.xyToTile(this.player.x, this.player.y)
     if (currentTile === 8) {
       if (Dialog.primaryDialog() === false && this.seenDialog === true) {

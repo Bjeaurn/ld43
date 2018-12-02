@@ -39,7 +39,7 @@ export class Scene001 extends Scene {
 
   init() {
     console.log(this.player)
-    this.player.setPosition(200, 200)
+    this.player.setPosition(300, 300)
     this.guards.push(
       new Guard(80, 24, 180, [
         { task: MOVE, x: 400, y: 24 },
@@ -59,19 +59,15 @@ export class Scene001 extends Scene {
     for (var i = 0; i < this.tiles.x; i++) {
       arr[i + this.tiles.x * 2] = 3
     }
-    this.map.loadMap(arr, 0, [
-      false,
-      true,
-      false,
-      true,
-      true,
-      false,
-      true,
-      false,
-      false
-    ], {
-      default: 0
-    })
+    arr[9 + this.tiles.x * 9] = 4
+    this.map.loadMap(
+      arr,
+      0,
+      [false, true, false, true, true, false, true, false, false],
+      {
+        default: 0
+      }
+    )
   }
 
   tick(delta: number) {
