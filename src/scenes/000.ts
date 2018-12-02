@@ -2,11 +2,15 @@ import { Scene, Gine } from 'gine'
 import { Player } from '../player'
 import { MapManager } from '../map'
 import { Dialog } from '../dialog'
+import { LOAD_001 } from './001'
+
+export const LOAD_000 = 'LOAD_000'
 
 export class Scene000 extends Scene {
   player: Player
   map: MapManager
   tiles: { x: number; y: number }
+  seenDialog: boolean = false
   constructor() {
     super()
     this.player = Gine.store.get('player')
@@ -56,6 +60,19 @@ export class Scene000 extends Scene {
     }
   }
 
+  second() {
+    const currentTile = this.map.xyToTile(this.player.x, this.player.y)
+    if (currentTile === 8) {
+      if (Dialog.primaryDialog() === false && this.seenDialog === true) {
+        this.destroy()
+      } else {
+        this.player.controlsEnabled = false
+        new Dialog('Something is happening', true)
+        this.seenDialog = true
+      }
+    }
+  }
+
   tick(delta: number) {
     const collision: boolean[] = this.map.isColliding(
       this.player.x - this.player.image.width / 2,
@@ -74,5 +91,9 @@ export class Scene000 extends Scene {
     this.map.draw({ default: -1 })
     this.player.draw()
     Dialog.handleDraw()
+  }
+
+  destroy() {
+    Gine.sendEvent(LOAD_001)
   }
 }

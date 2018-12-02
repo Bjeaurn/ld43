@@ -6,6 +6,8 @@ import { Guard } from '../guard'
 import { MOVE, HOLD } from '../task'
 import { Dialog } from '../dialog'
 
+export const LOAD_001 = 'LOAD_001'
+
 export class Scene001 extends Scene {
   player: Player
   guards: Guard[] = []
@@ -36,8 +38,8 @@ export class Scene001 extends Scene {
   }
 
   init() {
-    this.player.x = 200
-    this.player.y = 200
+    console.log(this.player)
+    this.player.setPosition(200, 200)
     this.guards.push(
       new Guard(80, 24, 180, [
         { task: MOVE, x: 400, y: 24 },
@@ -57,7 +59,19 @@ export class Scene001 extends Scene {
     for (var i = 0; i < this.tiles.x; i++) {
       arr[i + this.tiles.x * 2] = 3
     }
-    this.map.loadMap(arr, 0)
+    this.map.loadMap(arr, 0, [
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      true,
+      false,
+      false
+    ], {
+      default: 0
+    })
   }
 
   tick(delta: number) {

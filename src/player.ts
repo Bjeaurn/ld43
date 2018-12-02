@@ -52,7 +52,6 @@ export class Player {
   }
 
   updateTick(delta: number, isCollided: boolean = false) {
-    console.log(this.x, this.y)
     if (this.alive) {
       if (!isCollided) {
         this.setLastPosition()

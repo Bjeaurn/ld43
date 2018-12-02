@@ -6,11 +6,11 @@ import {
   IConfigArguments,
   SpriteOptions
 } from 'gine'
-import { Scene001 } from './scenes/001'
+import { Scene001, LOAD_001 } from './scenes/001'
 import { filter } from 'rxjs/operators'
 import { Player } from './player'
 import { MapManager } from './map'
-import { Scene000 } from './scenes/000'
+import { Scene000, LOAD_000 } from './scenes/000'
 
 const cfg: Config = new Config(
   <HTMLCanvasElement>document.querySelector('#game'),
@@ -28,6 +28,7 @@ const game = new Gine(cfg)
 const assets: any[] = [
   { name: 'player', src: 'player.png' },
   { name: 'player-dead', src: 'player-dead.png' },
+  { name: 'guard', src: 'guard-gun.png' },
   { name: 'guard-aiming', src: 'guard-gun-aiming.png' },
   { name: 'dialog-left', src: 'dialog-left.png' },
   { name: 'dialog-main', src: 'dialog-main.png' },
@@ -60,15 +61,26 @@ Gine.store.store('player', new Player())
 Gine.keyboard.key$.subscribe()
 // Gine.mouse.mouse$.subscribe()
 
-const mainScene = new Scene000()
-// const mainScene = new Scene001()
-game.changeScene(mainScene)
+const Scene_000 = new Scene000()
+const Scene_001 = new Scene001()
+
+game.changeScene(Scene_000)
 game.start()
+
+const eventList: { [key: string]: any } = {
+  LOAD_000: Scene_000,
+  LOAD_001: Scene_001
+}
 
 Gine.events
   .pipe(filter(ev => ev === Scene.DESTROY_CURRENT_SCENE))
-  .subscribe(ev => {
-    game.changeScene(mainScene)
-  })
+  .subscribe(ev => {})
 
-Gine.events.subscribe(ev => console.log(ev))
+// FIXME Put this in the engine in a proper way?
+Gine.events.subscribe(ev => {
+  if (eventList[ev]) {
+    game.changeScene(eventList[ev])
+  } else {
+    console.warn(`${ev} has not been found in eventList`)
+  }
+})
