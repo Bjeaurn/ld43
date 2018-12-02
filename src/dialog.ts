@@ -24,11 +24,13 @@ export class Dialog {
     }
   }
 
-  static handleUpdate(delta: number): void {
+  static handleUpdate(delta: number): boolean {
     const dialog = Dialog.primaryDialog()
     if (dialog) {
       dialog.update(delta)
+      return true
     }
+    return false
   }
 
   static handleDraw(): void {

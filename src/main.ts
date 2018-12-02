@@ -27,11 +27,6 @@ const game = new Gine(cfg)
 
 const assets: any[] = [
   { name: 'player', src: 'player.png' },
-  { name: 'dead-grass', src: 'dead-grass.png' },
-  { name: 'dirt', src: 'dirt.png' },
-  { name: 'tree', src: 'tree-2.png' },
-  { name: 'fence', src: 'fence.png' },
-  { name: 'guard', src: 'guard-gun.png' },
   { name: 'player-dead', src: 'player-dead.png' },
   { name: 'guard-aiming', src: 'guard-gun-aiming.png' },
   { name: 'dialog-left', src: 'dialog-left.png' },
@@ -52,7 +47,7 @@ Gine.store.sprite('enter-button', 'button-sprite.png', {
   ticksPerFrame: 48
 })
 
-Gine.store.sprite('internal-sprite', 'internal-sprite.png', {
+Gine.store.sprite('map-sprite', 'map-sprite.png', {
   widthPerImage: 32,
   heightPerImage: 32,
   imagesPerRow: 5,
@@ -63,7 +58,7 @@ Gine.store.store('level', new MapManager())
 Gine.store.store('player', new Player())
 
 Gine.keyboard.key$.subscribe()
-Gine.mouse.mouse$.subscribe()
+// Gine.mouse.mouse$.subscribe()
 
 const mainScene = new Scene000()
 // const mainScene = new Scene001()

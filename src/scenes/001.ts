@@ -57,21 +57,18 @@ export class Scene001 extends Scene {
     for (var i = 0; i < this.tiles.x; i++) {
       arr[i + this.tiles.x * 2] = 3
     }
-    this.map.loadMap(arr)
+    this.map.loadMap(arr, 0)
   }
 
   tick(delta: number) {
-    const collision: number[] = this.map.isColliding(
+    const collision: boolean[] = this.map.isColliding(
       this.player.x - this.player.image.width / 2,
       this.player.y - this.player.image.height / 2,
       this.player.image.width,
       this.player.image.height
     )
-    if (collision[0]) {
-      this.player.updateTick(delta, true)
-    } else {
-      this.player.updateTick(delta, false)
-    }
+    this.player.updateTick(delta, collision[0])
+
     this.guards.forEach(g => g.update(delta))
     Dialog.handleUpdate(delta)
   }
@@ -79,14 +76,8 @@ export class Scene001 extends Scene {
   frame() {
     this.map.draw()
     this.guards.forEach(g => Util.rotate(g.image, g.x, g.y, g.direction))
-    Util.rotate(
-      this.player.image,
-      this.player.x,
-      this.player.y,
-      this.player.direction
-    )
+    this.player.draw()
     Dialog.handleDraw()
-    this.player.checkDead()
     // Gine.handle.draw(this.player.image, this.player.x, this.player.y)
   }
 }

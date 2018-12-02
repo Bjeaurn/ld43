@@ -1,4 +1,5 @@
 import { ImageAsset, Gine, KEYCODES, Font } from 'gine'
+import { Util } from './util'
 
 export class Player {
   x: number
@@ -9,6 +10,7 @@ export class Player {
   image: ImageAsset
   moveSpeed: number = 20
   canMove: boolean[] = [true, true, true, true]
+  controlsEnabled: boolean = true
   alive: boolean = true
   constructor() {
     this.x = 0
@@ -38,12 +40,19 @@ export class Player {
     }
   }
 
+  setPosition(x: number, y: number) {
+    this.x = x
+    this.y = y
+    this.setLastPosition()
+  }
+
   resetLastPosition() {
     this.x = this.lastPos.x
     this.y = this.lastPos.y
   }
 
   updateTick(delta: number, isCollided: boolean = false) {
+    console.log(this.x, this.y)
     if (this.alive) {
       if (!isCollided) {
         this.setLastPosition()
@@ -51,21 +60,23 @@ export class Player {
         this.resetLastPosition()
       }
       let direction = []
-      if (Gine.keyboard.isPressed(KEYCODES.A)) {
-        this.x -= this.moveSpeed * delta
-        direction.push(270)
-      }
-      if (Gine.keyboard.isPressed(KEYCODES.D)) {
-        this.x += this.moveSpeed * delta
-        direction.push(90)
-      }
-      if (Gine.keyboard.isPressed(KEYCODES.S)) {
-        this.y += this.moveSpeed * delta
-        direction.push(180)
-      }
-      if (Gine.keyboard.isPressed(KEYCODES.W)) {
-        this.y -= this.moveSpeed * delta
-        direction.push(360)
+      if (this.controlsEnabled) {
+        if (Gine.keyboard.isPressed(KEYCODES.A)) {
+          this.x -= this.moveSpeed * delta
+          direction.push(270)
+        }
+        if (Gine.keyboard.isPressed(KEYCODES.D)) {
+          this.x += this.moveSpeed * delta
+          direction.push(90)
+        }
+        if (Gine.keyboard.isPressed(KEYCODES.S)) {
+          this.y += this.moveSpeed * delta
+          direction.push(180)
+        }
+        if (Gine.keyboard.isPressed(KEYCODES.W)) {
+          this.y -= this.moveSpeed * delta
+          direction.push(360)
+        }
       }
       if (direction.length > 0) {
         this.direction = direction.reduce((p, c) => p + c, 0) / direction.length
@@ -74,6 +85,11 @@ export class Player {
     if (!this.alive && this.alpha < 0.9) {
       this.alpha += delta
     }
+  }
+
+  draw() {
+    Util.rotate(this.image, this.x, this.y, this.direction)
+    this.checkDead()
   }
 
   setColliding(collision: number[]) {

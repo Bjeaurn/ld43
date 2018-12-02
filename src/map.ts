@@ -3,20 +3,18 @@ import { Util } from './util'
 
 export class MapManager {
   tiles: { x: number; y: number } = { x: 0, y: 0 }
-  assets: ImageAsset[] = []
+  assets: SpriteAsset[] = []
   map: number[] = []
+  collisionMap: boolean[] = []
+  activeAsset: SpriteAsset | null = null
 
   constructor() {
     this.tiles.x = Math.ceil(Gine.CONFIG.width / Gine.CONFIG.tileSize)
     this.tiles.y = Math.ceil(Gine.CONFIG.height / Gine.CONFIG.tileSize)
-    this.assets.push(Gine.store.get('dead-grass'))
-    this.assets.push(Gine.store.get('dirt'))
-    this.assets.push(Gine.store.get('tree'))
-    this.assets.push(Gine.store.get('fence'))
-    this.assets.push(Gine.store.get('internal-sprite'))
+    this.assets.push(Gine.store.get('map-sprite'))
   }
 
-  isColliding(x: number, y: number, width: number, height: number): number[] {
+  isColliding(x: number, y: number, width: number, height: number): boolean[] {
     // What tile are we on?
     const tileX = Math.round(x / Gine.CONFIG.tileSize)
     const tileY = Math.round(y / Gine.CONFIG.tileSize)
@@ -31,40 +29,46 @@ export class MapManager {
     ]
 
     // Detect collision for these tiles?
-    const tiles: number[] = indexArr.map(i => this.map[i])
+    const tiles: boolean[] = indexArr.map(i => {
+      const tile = this.map[i]
+      const collision = (this.collisionMap[tile] !== undefined) ? this.collisionMap[tile] : true
+      return collision
+    })
     return tiles
     // return Util.collision()
   }
 
-  loadMap(obj: number[]) {
+  loadMap(obj: number[], assetIndex: number, collisionMap: boolean[]) {
+    this.collisionMap = collisionMap
     this.map = obj
+    this.activeAsset = this.assets[assetIndex] as SpriteAsset
   }
 
   xyToIndex(x: number, y: number, width: number): number {
     return x + width * y
   }
 
-  draw() {
+  draw(settings?: { default?: number }) {
+    let defaultTile = 0
+    if (settings) {
+      if (settings.default) {
+        defaultTile = settings.default
+      }
+    }
     for (var y = 0; y < this.tiles.y; y++) {
       for (var x = 0; x < this.tiles.x; x++) {
         const index = this.xyToIndex(x, y, this.tiles.x)
-        const tile = this.assets[this.map[index] ? this.map[index] : 0] as
-          | ImageAsset
-          | SpriteAsset
-        if (tile.type === Asset.SPRITE) {
+        const tile = this.map[index] ? this.map[index] : defaultTile
+        if (tile === undefined) {
+          continue
+        }
+        if (this.activeAsset) {
           Gine.handle.drawSprite(
-            tile as SpriteAsset,
+            this.activeAsset,
             x * Gine.CONFIG.tileSize,
             y * Gine.CONFIG.tileSize,
-            0
+            tile
           )
-        } else {
-          Gine.handle.draw(
-            tile,
-            x * Gine.CONFIG.tileSize,
-            y * Gine.CONFIG.tileSize
-          )
-        }
       }
     }
   }
