@@ -1,4 +1,4 @@
-import { Gine, ImageAsset, Font } from 'gine'
+import { Gine, ImageAsset, Font, KEYCODES, SpriteAsset } from 'gine'
 
 export class Dialog {
   static dialogs: Dialog[] = []
@@ -47,6 +47,7 @@ export class Dialog {
   private width: number
   public active: boolean
   public actualMessage: string[] = []
+  private enterButton: SpriteAsset | null = null
   constructor(
     readonly message: string,
     readonly acknowledgement: boolean = true,
@@ -62,28 +63,31 @@ export class Dialog {
     this.actualMessage = this.message.split('\n')
     this.width = Gine.handle.handle.measureText(
       longestString(this.actualMessage)
-    ).width - 24
+    ).width
     if (this.x < 10) {
       this.x = 20
+    }
+    if (this.acknowledgement) {
+      this.enterButton = Gine.store.get('enter-button')
     }
   }
 
   draw() {
     Gine.handle.handle.drawImage(
       this.images[1].image,
-      this.x - this.width + 2,
+      this.x - this.width - 2,
       this.y,
-      this.width + 100,
+      this.x + this.width - 32,
       100
     )
 
-    Gine.handle.draw(this.images[0], this.width / 4, this.y)
+    Gine.handle.draw(this.images[0], this.x - this.width - 8, this.y)
 
-    Gine.handle.draw(this.images[2], this.x + this.x / 3, this.y)
+    Gine.handle.draw(this.images[2], this.x + this.width + 8, this.y)
 
     Gine.handle.setColor(255, 255, 255, 1)
     const fontSize = 10
-    Gine.handle.setFont(new Font('Helvetica', fontSize))
+    Gine.handle.setFont(new Font('Lucida Console, Monaco, monospace', fontSize))
     this.actualMessage.forEach((m: string, index: number) => {
       Gine.handle.text(
         m,
@@ -91,6 +95,14 @@ export class Dialog {
         this.y + 28 + index * fontSize
       )
     })
+
+    if (this.acknowledgement && this.enterButton) {
+      Gine.handle.drawSprite(
+        this.enterButton,
+        this.x + this.x - 64,
+        this.y + 60
+      )
+    }
   }
 
   update(delta: number) {
@@ -100,6 +112,11 @@ export class Dialog {
         if (this.timer >= this.duration) {
           this.destroy()
         }
+      }
+    } else if (this.acknowledgement && this.enterButton) {
+      this.enterButton.update()
+      if (Gine.keyboard.isPressed(KEYCODES.ENTER)) {
+        this.destroy()
       }
     }
   }

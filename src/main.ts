@@ -1,4 +1,11 @@
-import { Gine, Config, Scene, DEFAULT_CONFIG, IConfigArguments } from 'gine'
+import {
+  Gine,
+  Config,
+  Scene,
+  DEFAULT_CONFIG,
+  IConfigArguments,
+  SpriteOptions
+} from 'gine'
 import { MainScene } from './scenes/main'
 import { filter } from 'rxjs/operators'
 import { Player } from './player'
@@ -29,12 +36,20 @@ const assets: any[] = [
   { name: 'dialog-left', src: 'dialog-left.png' },
   { name: 'dialog-main', src: 'dialog-main.png' },
   { name: 'dialog-right', src: 'dialog-right.png' },
-  { name: 'guard-fire', src: 'guard-gun-fire.png' },
+  { name: 'guard-fire', src: 'guard-gun-fire.png' }
 ]
 
 assets.forEach(d => {
   Gine.store.image(d.name, d.src)
 })
+
+Gine.store.sprite('enter-button', 'button-sprite.png', {
+  widthPerImage: 32,
+  heightPerImage: 32,
+  imagesPerRow: 2,
+  numberOfFrames: 2,
+  ticksPerFrame: 48
+} as SpriteOptions)
 
 Gine.store.store('level', new MapManager())
 Gine.store.store('player', new Player())

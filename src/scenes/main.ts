@@ -30,7 +30,7 @@ export class MainScene extends Scene {
       this.dialogOn = true
       new Dialog(
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n Nulla sagittis sagittis nisl, eu tincidunt urna convallis nec.\n Aenean fermentum justo nisi, id vestibulum nunc bibendum eum.\n Nulla dignissim feugiat dui vitae fermentum.\n Morbi blandit est nec massa maximus, dignissim ',
-        false,
+        true,
         10
       )
     }
