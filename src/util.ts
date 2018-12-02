@@ -31,6 +31,21 @@ export class Util {
     }
     return false
   }
+
+  static inVicinity(obj: any, x: number, y: number, range: number): boolean {
+    if (!obj.x || !obj.y) {
+      throw new Error('Cannot pass an object to inVicinity without coordinates')
+    }
+    if (
+      x <= obj.x + range &&
+      x >= obj.x - range &&
+      y <= obj.y + range &&
+      y >= obj.y - range
+    ) {
+      return true
+    }
+    return false
+  }
 }
 
 export function objectToCollisionObject(obj: any): CollisionObject {

@@ -11,6 +11,7 @@ import { filter } from 'rxjs/operators'
 import { Player } from './player'
 import { MapManager } from './map'
 import { Scene000, LOAD_000 } from './scenes/000'
+import { SceneCredits } from './scenes/credits'
 
 const cfg: Config = new Config(
   <HTMLCanvasElement>document.querySelector('#game'),
@@ -64,7 +65,9 @@ Gine.store.store('map-sprite-collision', [
   true,
   false,
   false,
-  true
+  true,
+  false,
+  false
 ])
 Gine.store.sprite('map-sprite', 'map-sprite.png', {
   widthPerImage: 32,
@@ -81,13 +84,15 @@ Gine.keyboard.key$.subscribe()
 
 const Scene_000 = new Scene000()
 const Scene_001 = new Scene001()
+const Scene_Credits = new SceneCredits()
 
-game.changeScene(Scene_000)
+game.changeScene(Scene_Credits)
 game.start()
 
 const eventList: { [key: string]: any } = {
   LOAD_000: Scene_000,
-  LOAD_001: Scene_001
+  LOAD_001: Scene_001,
+  LOAD_CREDITS: Scene_Credits
 }
 
 Gine.events

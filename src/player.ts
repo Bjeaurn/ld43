@@ -77,6 +77,12 @@ export class Player {
           direction.push(360)
         }
       }
+
+      if (this.x < 0) this.x = 0
+      if (this.y < 0) this.y = 0
+      if (this.x > Gine.CONFIG.width) this.x = Gine.CONFIG.width
+      if (this.y > Gine.CONFIG.height) this.y = Gine.CONFIG.height
+
       if (direction.length > 0) {
         this.direction = direction.reduce((p, c) => p + c, 0) / direction.length
       }

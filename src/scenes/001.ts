@@ -6,6 +6,7 @@ import { Guard } from '../guard'
 import { MOVE, HOLD } from '../task'
 import { Dialog } from '../dialog'
 import { Prisoner } from '../prisoner'
+import { LOAD_CREDITS } from './credits';
 
 export const LOAD_001 = 'LOAD_001'
 
@@ -17,7 +18,8 @@ export class Scene001 extends Scene {
   tiles: { x: number; y: number }
   seconds: number = 0
   dialogOn: boolean = false
-  hasEaten: boolean = false
+  hasEaten: number = -1
+  sharedSecret: number = 0
   constructor() {
     super()
     this.player = Gine.store.get('player')
@@ -45,6 +47,39 @@ export class Scene001 extends Scene {
     })
     if (this.seconds === 1) {
       new Dialog("Don't get any closer!\nI will shoot you!", false, 3)
+    }
+    if (this.hasEaten > -1) {
+      if (this.hasEaten > 0) {
+        this.hasEaten--
+      }
+      if (this.hasEaten === 1) {
+        this.prisoners[4].jobs = [{ task: HOLD, direction: 0, time: 60 }]
+        this.prisoners[4].currentTask = { task: MOVE, x: 490, y: 360 }
+        new Dialog('Hey you there,\nmeet me behind one of the tents', true)
+      }
+      if (
+        this.sharedSecret === 0 &&
+        this.prisoners[4].isInVicinity(490, 360, 20) &&
+        this.prisoners[4].isInVicinity(this.player.x, this.player.y, 20)
+      ) {
+        new Dialog(
+          'You seem to be fit enough to get out of here\nTake this steelcutter and get out of here!\nThere is a weakness in the fence up north',
+          true
+        )
+        this.sharedSecret = 1
+        this.prisoners[4].jobs = [{ task: 'LOITER' }, { task: HOLD, time: 3 }]
+        this.prisoners[4].currentTask = { task: MOVE, x: 490, y: 260 }
+        this.map.map[14 + this.tiles.x * 2] = 11
+        this.guards[0].jobs.push(
+          { task: MOVE, x: 540, y: 24 },
+          { task: HOLD, time: 1, direction: 90 }
+        )
+      }
+      if (this.sharedSecret === 1) {
+        if (Util.inVicinity(this.player, 32, 32, 24)) {
+          this.destroy()
+        }
+      }
     }
   }
 
@@ -143,8 +178,8 @@ export class Scene001 extends Scene {
 
   frame() {
     if (this.map.xyToTile(this.player.x, this.player.y) === 10) {
-      if (!this.hasEaten) {
-        this.hasEaten = true
+      if (this.hasEaten === -1) {
+        this.hasEaten = 10
         this.player.moveSpeed += 10
         new Dialog(
           'You have received your morning rations of food.\n\n(Your speed has increased)',
@@ -158,5 +193,9 @@ export class Scene001 extends Scene {
     this.player.draw()
     Dialog.handleDraw()
     // Gine.handle.draw(this.player.image, this.player.x, this.player.y)
+  }
+
+  destroy() {
+    Gine.sendEvent(LOAD_CREDITS)
   }
 }
