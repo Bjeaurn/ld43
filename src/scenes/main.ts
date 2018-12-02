@@ -26,9 +26,13 @@ export class MainScene extends Scene {
 
   second() {
     this.seconds++
-    if (this.seconds > 6 && !this.dialogOn) {
+    if (this.seconds > 1 && !this.dialogOn) {
       this.dialogOn = true
-      new Dialog('Cyka blyat idi nahui', false, 10)
+      new Dialog(
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n Nulla sagittis sagittis nisl, eu tincidunt urna convallis nec.\n Aenean fermentum justo nisi, id vestibulum nunc bibendum eum.\n Nulla dignissim feugiat dui vitae fermentum.\n Morbi blandit est nec massa maximus, dignissim ',
+        false,
+        10
+      )
     }
   }
 

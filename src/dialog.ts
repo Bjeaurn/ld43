@@ -46,6 +46,7 @@ export class Dialog {
   private y: number
   private width: number
   public active: boolean
+  public actualMessage: string[] = []
   constructor(
     readonly message: string,
     readonly acknowledgement: boolean = true,
@@ -58,23 +59,38 @@ export class Dialog {
     this.images.push(Gine.store.get('dialog-right'))
     this.active = false
     this.id = Dialog.add(this)
-    this.width = Gine.handle.handle.measureText(this.message).width
+    this.actualMessage = this.message.split('\n')
+    this.width = Gine.handle.handle.measureText(
+      longestString(this.actualMessage)
+    ).width - 24
+    if (this.x < 10) {
+      this.x = 20
+    }
   }
 
   draw() {
-    Gine.handle.draw(this.images[0], this.x - this.width - 10, this.y)
-
     Gine.handle.handle.drawImage(
       this.images[1].image,
-      this.x - 82,
+      this.x - this.width + 2,
       this.y,
       this.width + 100,
       100
     )
-    Gine.handle.draw(this.images[2], this.x + this.width + 10, this.y)
+
+    Gine.handle.draw(this.images[0], this.width / 4, this.y)
+
+    Gine.handle.draw(this.images[2], this.x + this.x / 3, this.y)
+
     Gine.handle.setColor(255, 255, 255, 1)
-    Gine.handle.setFont(new Font('Helvetica'), 10)
-    Gine.handle.text(this.message, this.x - this.width + 4, this.y + 28)
+    const fontSize = 10
+    Gine.handle.setFont(new Font('Helvetica', fontSize))
+    this.actualMessage.forEach((m: string, index: number) => {
+      Gine.handle.text(
+        m,
+        this.x - this.width + 4,
+        this.y + 28 + index * fontSize
+      )
+    })
   }
 
   update(delta: number) {
@@ -96,4 +112,20 @@ export class Dialog {
       1
     )
   }
+}
+
+export function longestString(a: string[]): string {
+  var c = 0,
+    d = 0,
+    l = 0,
+    i = a.length
+  if (i)
+    while (i--) {
+      d = a[i].length
+      if (d > c) {
+        l = i
+        c = d
+      }
+    }
+  return a[l]
 }
