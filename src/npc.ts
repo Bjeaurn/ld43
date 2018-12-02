@@ -1,7 +1,10 @@
+import { MapManager } from './map'
+import { ImageAsset } from 'gine'
+
+// FIXME Add to Gine?
 export class NPC implements INPC {
   static instances: NPC[] = []
   static lastID = 0
-
   static add(npc: NPC): number {
     NPC.lastID++
     NPC.instances.push(npc)
@@ -12,8 +15,10 @@ export class NPC implements INPC {
     return NPC.instances[NPC.instances.findIndex(n => n.id === id)]
   }
 
+  image: ImageAsset
   x: number = 0
   y: number = 0
+  lastPos: { x: number; y: number } = { x: 0, y: 0 }
   direction: number = 0
   moveDirection: string[] = []
   moveSpeed: number = 0
@@ -24,6 +29,37 @@ export class NPC implements INPC {
     this.x = x
     this.y = y
     this.id = NPC.add(this)
+    this.image = {} as ImageAsset
+  }
+
+  setPosition(x: number, y: number) {
+    this.x = x
+    this.y = y
+    this.setLastPosition()
+  }
+
+  protected setLastPosition() {
+    this.lastPos = { x: this.x, y: this.y }
+  }
+
+  resetLastPosition() {
+    this.x = this.lastPos.x
+    this.y = this.lastPos.y
+  }
+
+  checkCollision(map: MapManager) {
+    const collision: boolean[] = map.isColliding(
+      this.x - this.image.width / 2,
+      this.y - this.image.height / 2,
+      this.image.width,
+      this.image.height
+    )
+    if (collision[0] === true) {
+      this.nextTask()
+      this.resetLastPosition()
+    } else {
+      this.setLastPosition()
+    }
   }
 
   faceTo(x: number, y: number) {

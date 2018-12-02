@@ -33,7 +33,10 @@ const assets: any[] = [
   { name: 'dialog-left', src: 'dialog-left.png' },
   { name: 'dialog-main', src: 'dialog-main.png' },
   { name: 'dialog-right', src: 'dialog-right.png' },
-  { name: 'guard-fire', src: 'guard-gun-fire.png' }
+  { name: 'guard-fire', src: 'guard-gun-fire.png' },
+  { name: 'prisoner-1', src: 'prisoner-1.png' },
+  { name: 'prisoner-2', src: 'prisoner-2.png' },
+  { name: 'prisoner-3', src: 'prisoner-3.png' }
 ]
 
 assets.forEach(d => {

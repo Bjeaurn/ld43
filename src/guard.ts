@@ -46,6 +46,10 @@ export class Guard extends NPC {
     // }
   }
 
+  isCloseTo(prisoner: NPC): boolean {
+    return this.isInVicinity(prisoner.x, prisoner.y, this.visionRange)
+  }
+
   update(delta: number) {
     const player = Gine.store.get('player')
     if (

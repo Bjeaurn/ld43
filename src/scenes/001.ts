@@ -5,12 +5,14 @@ import { Util } from '../util'
 import { Guard } from '../guard'
 import { MOVE, HOLD } from '../task'
 import { Dialog } from '../dialog'
+import { Prisoner } from '../prisoner'
 
 export const LOAD_001 = 'LOAD_001'
 
 export class Scene001 extends Scene {
   player: Player
   guards: Guard[] = []
+  prisoners: Prisoner[] = []
   map: MapManager
   tiles: { x: number; y: number }
   seconds: number = 0
@@ -35,10 +37,16 @@ export class Scene001 extends Scene {
         10
       )
     }
+    this.guards.forEach(g => {
+      this.prisoners.forEach(p => {
+        if (g.isCloseTo(p) === true) {
+          console.log('Should shoot')
+        }
+      })
+    })
   }
 
   init() {
-    console.log(this.player)
     this.player.setPosition(300, 300)
     this.guards.push(
       new Guard(80, 24, 180, [
@@ -53,6 +61,18 @@ export class Scene001 extends Scene {
         { task: HOLD, time: 6, direction: 90 },
         { task: MOVE, x: 16, y: 112 }
       ])
+    )
+
+    this.prisoners.push(
+      new Prisoner(1, 200, 200, 0, [{ task: 'LOITER' }]),
+      new Prisoner(2, 230, 200, 0, [{ task: 'LOITER' }]),
+      new Prisoner(3, 260, 200, 0, [{ task: 'LOITER' }]),
+      new Prisoner(1, 200, 240, 0, [{ task: 'LOITER' }]),
+      new Prisoner(2, 230, 240, 0, [{ task: 'LOITER' }]),
+      new Prisoner(3, 260, 240, 0, [{ task: 'LOITER' }]),
+      new Prisoner(1, 200, 280, 0, [{ task: 'LOITER' }]),
+      new Prisoner(2, 230, 280, 0, [{ task: 'LOITER' }]),
+      new Prisoner(3, 260, 280, 0, [{ task: 'LOITER' }])
     )
     const arr = new Array(this.tiles.x * this.tiles.y)
     arr[5 + this.tiles.x * 6] = 2
@@ -79,13 +99,21 @@ export class Scene001 extends Scene {
     )
     this.player.updateTick(delta, collision[0])
 
-    this.guards.forEach(g => g.update(delta))
+    this.guards.forEach(g => {
+      g.update(delta)
+      g.checkCollision(this.map)
+    })
+    this.prisoners.forEach(p => {
+      p.update(delta)
+      p.checkCollision(this.map)
+    })
     Dialog.handleUpdate(delta)
   }
 
   frame() {
     this.map.draw()
     this.guards.forEach(g => Util.rotate(g.image, g.x, g.y, g.direction))
+    this.prisoners.forEach(p => Util.rotate(p.image, p.x, p.y, p.direction))
     this.player.draw()
     Dialog.handleDraw()
     // Gine.handle.draw(this.player.image, this.player.x, this.player.y)
