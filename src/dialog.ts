@@ -66,6 +66,7 @@ export class Dialog {
     this.width = Gine.handle.handle.measureText(
       longestString(this.actualMessage)
     ).width
+    this.x -= this.width
     if (this.x < 10) {
       this.x = 20
     }
@@ -77,19 +78,15 @@ export class Dialog {
   draw() {
     Gine.handle.handle.drawImage(
       this.images[1].image,
-      this.x - this.width - 2,
+      this.x,
       this.y,
-      this.width + 16,
+      this.width + 40,
       100
     )
 
-    Gine.handle.draw(this.images[0], this.x - this.width - 8, this.y)
+    Gine.handle.draw(this.images[0], this.x - 8, this.y)
 
-    Gine.handle.draw(
-      this.images[2],
-      this.x - this.width + this.width + 8,
-      this.y
-    )
+    Gine.handle.draw(this.images[2], this.x + this.width + 40, this.y)
 
     Gine.handle.setColor(255, 255, 255, 1)
     const fontSize = 10
@@ -97,7 +94,7 @@ export class Dialog {
     this.actualMessage.forEach((m: string, index: number) => {
       Gine.handle.text(
         m,
-        this.x - this.width + 4,
+        this.x + 4,
         this.y + 28 + index * fontSize + index * 4
       )
     })
@@ -105,7 +102,7 @@ export class Dialog {
     if (this.acknowledgement && this.enterButton) {
       Gine.handle.drawSprite(
         this.enterButton,
-        this.x - this.width + this.width - 20,
+        this.x + this.width + 10,
         this.y + 60
       )
     }

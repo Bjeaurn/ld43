@@ -41,17 +41,7 @@ export class Scene000 extends Scene {
       arr[10 + this.tiles.x * 1] = 6
       arr[10 + this.tiles.x * 3] = 6
       arr[10 + this.tiles.x * 5] = 6
-      this.map.loadMap(arr, 0, [
-        false,
-        true,
-        false,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false
-      ])
+      this.map.loadMap(arr, 0, Gine.store.get('map-sprite-collision'))
 
       this.player.controlsEnabled = false
       this.player.setPosition(
@@ -78,7 +68,7 @@ export class Scene000 extends Scene {
         this.destroy()
       } else {
         this.player.controlsEnabled = false
-        new Dialog('Something is happening', true)
+        new Dialog("(guard screaming)\n Don't get any closer!!", true)
         this.seenDialog = true
       }
     }
@@ -99,7 +89,7 @@ export class Scene000 extends Scene {
   }
 
   frame() {
-    this.map.draw({ default: -1 })
+    this.map.draw()
     this.player.draw()
     Dialog.handleDraw()
   }

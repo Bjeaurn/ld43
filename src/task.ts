@@ -31,10 +31,21 @@ export class TaskHandler {
           delete job.x
           delete job.y
           actor.nextTask()
+          return
         }
         if (!job.x && !job.y) {
-          job.x = actor.x + Math.floor(Math.random() * (50 - -50 + 1)) + -50
-          job.y = actor.y + Math.floor(Math.random() * (50 - -50 + 1)) + -50
+          job.x =
+            actor.x +
+            Math.floor(
+              Math.random() * (actor.moveSpeed - -actor.moveSpeed + 1)
+            ) +
+            -actor.moveSpeed
+          job.y =
+            actor.y +
+            Math.floor(
+              Math.random() * (actor.moveSpeed - -actor.moveSpeed + 1)
+            ) +
+            -actor.moveSpeed
         }
         actor.moveDirection = calculateMoveVector(
           actor.x,

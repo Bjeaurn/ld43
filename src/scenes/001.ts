@@ -17,6 +17,7 @@ export class Scene001 extends Scene {
   tiles: { x: number; y: number }
   seconds: number = 0
   dialogOn: boolean = false
+  hasEaten: boolean = false
   constructor() {
     super()
     this.player = Gine.store.get('player')
@@ -29,31 +30,33 @@ export class Scene001 extends Scene {
 
   second() {
     this.seconds++
-    if (this.seconds > 1 && !this.dialogOn) {
-      this.dialogOn = true
-      new Dialog(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n Nulla sagittis sagittis nisl, eu tincidunt urna convallis nec.\n Aenean fermentum justo nisi, id vestibulum nunc bibendum eum.\n Nulla dignissim feugiat dui vitae fermentum.\n Morbi blandit est nec massa maximus, dignissim ',
-        true,
-        10
-      )
-    }
+    // if (this.seconds > 1 && !this.dialogOn) {
+    //   this.dialogOn = true
+    //   new Dialog(
+    //     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n Nulla sagittis sagittis nisl, eu tincidunt urna convallis nec.\n Aenean fermentum justo nisi, id vestibulum nunc bibendum eum.\n Nulla dignissim feugiat dui vitae fermentum.\n Morbi blandit est nec massa maximus, dignissim ',
+    //     true,
+    //     10
+    //   )
+    // }
     this.guards.forEach(g => {
-      this.prisoners.forEach(p => {
-        if (g.isCloseTo(p) === true) {
-          console.log('Should shoot')
-        }
+      g.prisonersToLookFor = this.prisoners.filter((p: Prisoner) => {
+        return p.alive && g.isInVicinity(p.x, p.y, g.visionRange)
       })
     })
+    if (this.seconds === 1) {
+      new Dialog("Don't get any closer!\nI will shoot you!", false, 3)
+    }
   }
 
   init() {
-    this.player.setPosition(300, 300)
+    this.player.setPosition(332, 316)
     this.guards.push(
       new Guard(80, 24, 180, [
+        { task: HOLD, time: 1.5, direction: 180 },
         { task: MOVE, x: 400, y: 24 },
         { task: HOLD, time: 5, direction: 180 },
         { task: MOVE, x: 80, y: 24 },
-        { task: HOLD, time: 5, direction: 180 }
+        { task: HOLD, time: 3.5, direction: 180 }
       ]),
       new Guard(16, 112, 90, [
         { task: HOLD, time: 4, direction: 90 },
@@ -64,30 +67,58 @@ export class Scene001 extends Scene {
     )
 
     this.prisoners.push(
-      new Prisoner(1, 200, 200, 0, [{ task: 'LOITER' }]),
-      new Prisoner(2, 230, 200, 0, [{ task: 'LOITER' }]),
-      new Prisoner(3, 260, 200, 0, [{ task: 'LOITER' }]),
-      new Prisoner(1, 200, 240, 0, [{ task: 'LOITER' }]),
-      new Prisoner(2, 230, 240, 0, [{ task: 'LOITER' }]),
-      new Prisoner(3, 260, 240, 0, [{ task: 'LOITER' }]),
-      new Prisoner(1, 200, 280, 0, [{ task: 'LOITER' }]),
-      new Prisoner(2, 230, 280, 0, [{ task: 'LOITER' }]),
-      new Prisoner(3, 260, 280, 0, [{ task: 'LOITER' }])
+      new Prisoner(1, 400, 200, 0, [
+        { task: 'LOITER' },
+        { task: HOLD, time: Math.random() * 5 }
+      ]),
+      new Prisoner(2, 180, 180, 0, [
+        // This one is doing something
+        { task: HOLD, time: 1 },
+        { task: MOVE, x: 180, y: 0 }
+      ]),
+      new Prisoner(3, 260, 220, 0, [
+        { task: 'LOITER' },
+        { task: HOLD, time: Math.random() * 5 }
+      ]),
+      new Prisoner(1, 300, 340, 0, [
+        { task: 'LOITER' },
+        { task: HOLD, time: Math.random() * 5 }
+      ]),
+      new Prisoner(2, 480, 240, 0, [
+        { task: 'LOITER' },
+        { task: HOLD, time: Math.random() * 5 }
+      ]),
+      new Prisoner(3, 430, 160, 0, [
+        { task: 'LOITER' },
+        { task: HOLD, time: Math.random() * 5 }
+      ]),
+      new Prisoner(1, 200, 280, 0, [
+        { task: 'LOITER' },
+        { task: HOLD, time: Math.random() * 5 }
+      ]),
+      new Prisoner(2, 230, 280, 0, [
+        { task: 'LOITER' },
+        { task: HOLD, time: Math.random() * 5 }
+      ]),
+      new Prisoner(3, 260, 280, 0, [
+        { task: 'LOITER' },
+        { task: HOLD, time: Math.random() * 5 }
+      ])
     )
     const arr = new Array(this.tiles.x * this.tiles.y)
-    arr[5 + this.tiles.x * 6] = 2
     for (var i = 0; i < this.tiles.x; i++) {
       arr[i + this.tiles.x * 2] = 3
     }
-    arr[9 + this.tiles.x * 9] = 4
-    this.map.loadMap(
-      arr,
-      0,
-      [false, true, false, true, true, false, true, false, false],
-      {
-        default: 0
-      }
-    )
+    for (var j = 3; j < 13; j++) {
+      arr[2 + this.tiles.x * j] = 9
+    }
+    arr[7 + this.tiles.x * 10] = 4
+    arr[10 + this.tiles.x * 10] = 4
+    arr[13 + this.tiles.x * 10] = 4
+    arr[15 + this.tiles.x * 6] = 10
+    this.map.loadMap(arr, 0, Gine.store.get('map-sprite-collision'), {
+      default: 0
+    })
   }
 
   tick(delta: number) {
@@ -104,16 +135,26 @@ export class Scene001 extends Scene {
       g.checkCollision(this.map)
     })
     this.prisoners.forEach(p => {
-      p.update(delta)
       p.checkCollision(this.map)
+      p.update(delta)
     })
     Dialog.handleUpdate(delta)
   }
 
   frame() {
+    if (this.map.xyToTile(this.player.x, this.player.y) === 10) {
+      if (!this.hasEaten) {
+        this.hasEaten = true
+        this.player.moveSpeed += 10
+        new Dialog(
+          'You have received your morning rations of food.\n\n(Your speed has increased)',
+          true
+        )
+      }
+    }
     this.map.draw()
-    this.guards.forEach(g => Util.rotate(g.image, g.x, g.y, g.direction))
     this.prisoners.forEach(p => Util.rotate(p.image, p.x, p.y, p.direction))
+    this.guards.forEach(g => Util.rotate(g.image, g.x, g.y, g.direction))
     this.player.draw()
     Dialog.handleDraw()
     // Gine.handle.draw(this.player.image, this.player.x, this.player.y)

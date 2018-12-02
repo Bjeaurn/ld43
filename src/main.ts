@@ -36,7 +36,10 @@ const assets: any[] = [
   { name: 'guard-fire', src: 'guard-gun-fire.png' },
   { name: 'prisoner-1', src: 'prisoner-1.png' },
   { name: 'prisoner-2', src: 'prisoner-2.png' },
-  { name: 'prisoner-3', src: 'prisoner-3.png' }
+  { name: 'prisoner-3', src: 'prisoner-3.png' },
+  { name: 'prisoner-1-dead', src: 'prisoner-1-dead.png' },
+  { name: 'prisoner-2-dead', src: 'prisoner-2-dead.png' },
+  { name: 'prisoner-3-dead', src: 'prisoner-3-dead.png' }
 ]
 
 assets.forEach(d => {
@@ -51,11 +54,23 @@ Gine.store.sprite('enter-button', 'button-sprite.png', {
   ticksPerFrame: 48
 })
 
+Gine.store.store('map-sprite-collision', [
+  false,
+  true,
+  false,
+  true,
+  true,
+  false,
+  true,
+  false,
+  false,
+  true
+])
 Gine.store.sprite('map-sprite', 'map-sprite.png', {
   widthPerImage: 32,
   heightPerImage: 32,
   imagesPerRow: 5,
-  numberOfFrames: 10
+  numberOfFrames: 20
 })
 
 Gine.store.store('level', new MapManager())

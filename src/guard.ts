@@ -2,16 +2,18 @@ import { NPC, calculateMoveVector } from './npc'
 import { ImageAsset, Gine } from 'gine'
 import { Task, TaskHandler, HOLD } from './task'
 import { Player } from './player'
+import { Prisoner } from './prisoner'
 
 export class Guard extends NPC {
   image: ImageAsset
   jobs: Task[] = []
+  prisonersToLookFor: Prisoner[] = []
   currentTask: Task | null
   moveSpeed: number = 40
   isHunting: boolean = false
   aggressiveness: number = 3
-  shootingRange: number = 90
-  visionRange: number = 100
+  shootingRange: number = 100
+  visionRange: number = 99
   constructor(x: number, y: number, direction: number, jobs: Task[]) {
     super(x, y)
     this.image = Gine.store.get('guard')
@@ -23,15 +25,17 @@ export class Guard extends NPC {
     }
   }
 
-  aimAndShoot(player: Player, delta: number) {
+  aimAndShoot(target: Player | Prisoner, delta: number) {
     this.moveDirection = []
-    this.faceTo(player.x, player.y)
-    if (this.distanceTo(player.x, player.y) <= this.shootingRange) {
+    this.faceTo(target.x, target.y)
+    if (this.distanceTo(target.x, target.y) <= this.shootingRange) {
       this.timer += delta
       if (this.timer >= this.aggressiveness - 0.2) {
         this.image = Gine.store.get('guard-fire')
         if (this.timer >= this.aggressiveness) {
-          player.hit()
+          target.hit()
+          this.image = Gine.store.get('guard-aiming')
+          this.timer = 0
         }
       }
     }
@@ -52,7 +56,14 @@ export class Guard extends NPC {
 
   update(delta: number) {
     const player = Gine.store.get('player')
-    if (
+    if (this.prisonersToLookFor.length > 0) {
+      if (!this.isHunting) {
+        this.isHunting = true
+        this.timer = 0
+        this.image = Gine.store.get('guard-aiming')
+      }
+      this.aimAndShoot(this.prisonersToLookFor[0], delta)
+    } else if (
       player.alive &&
       this.isInVicinity(player.x, player.y, this.visionRange)
     ) {
