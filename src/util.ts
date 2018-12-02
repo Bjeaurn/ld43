@@ -34,7 +34,8 @@ export class Util {
 
   static inVicinity(obj: any, x: number, y: number, range: number): boolean {
     if (!obj.x || !obj.y) {
-      throw new Error('Cannot pass an object to inVicinity without coordinates')
+      console.warn('Error in inVicinity possibly?')
+      return false
     }
     if (
       x <= obj.x + range &&
