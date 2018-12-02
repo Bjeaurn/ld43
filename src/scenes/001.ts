@@ -6,7 +6,7 @@ import { Guard } from '../guard'
 import { MOVE, HOLD } from '../task'
 import { Dialog } from '../dialog'
 import { Prisoner } from '../prisoner'
-import { LOAD_CREDITS } from './credits';
+import { LOAD_CREDITS } from './credits'
 
 export const LOAD_001 = 'LOAD_001'
 
@@ -70,6 +70,8 @@ export class Scene001 extends Scene {
         this.prisoners[4].jobs = [{ task: 'LOITER' }, { task: HOLD, time: 3 }]
         this.prisoners[4].currentTask = { task: MOVE, x: 490, y: 260 }
         this.map.map[14 + this.tiles.x * 2] = 11
+        this.map.map[0] = 12
+        this.map.map[0 + this.tiles.x * 1] = 12
         this.guards[0].jobs.push(
           { task: MOVE, x: 540, y: 24 },
           { task: HOLD, time: 1, direction: 90 }

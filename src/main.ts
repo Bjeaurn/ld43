@@ -67,6 +67,7 @@ Gine.store.store('map-sprite-collision', [
   false,
   true,
   false,
+  false,
   false
 ])
 Gine.store.sprite('map-sprite', 'map-sprite.png', {
@@ -86,7 +87,7 @@ const Scene_000 = new Scene000()
 const Scene_001 = new Scene001()
 const Scene_Credits = new SceneCredits()
 
-game.changeScene(Scene_Credits)
+game.changeScene(Scene_000)
 game.start()
 
 const eventList: { [key: string]: any } = {
