@@ -1,8 +1,9 @@
-import { ImageAsset, Gine, KEYCODES } from 'gine'
+import { ImageAsset, Gine, KEYCODES, Font } from 'gine'
 
 export class Player {
   x: number
   y: number
+  alpha: number = 0
   direction: number = 0
   lastPos: { x: number; y: number } = { x: 0, y: 0 }
   image: ImageAsset
@@ -23,6 +24,18 @@ export class Player {
   hit() {
     this.alive = false
     this.image = Gine.store.get('player-dead')
+  }
+
+  checkDead() {
+    if (!this.alive) {
+      Gine.handle.setFont(new Font('Lucida Console, Monaco, monospace', 40))
+      Gine.handle.setColor(255, 0, 0, this.alpha)
+      Gine.handle.text(
+        'YOU DIED',
+        Gine.CONFIG.width / 2 - 80,
+        Gine.CONFIG.height / 2
+      )
+    }
   }
 
   resetLastPosition() {
@@ -57,6 +70,9 @@ export class Player {
       if (direction.length > 0) {
         this.direction = direction.reduce((p, c) => p + c, 0) / direction.length
       }
+    }
+    if (!this.alive && this.alpha < 0.9) {
+      this.alpha += delta
     }
   }
 

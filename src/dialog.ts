@@ -77,13 +77,17 @@ export class Dialog {
       this.images[1].image,
       this.x - this.width - 2,
       this.y,
-      this.x + this.width - 32,
+      this.width + 16,
       100
     )
 
     Gine.handle.draw(this.images[0], this.x - this.width - 8, this.y)
 
-    Gine.handle.draw(this.images[2], this.x + this.width + 8, this.y)
+    Gine.handle.draw(
+      this.images[2],
+      this.x - this.width + this.width + 8,
+      this.y
+    )
 
     Gine.handle.setColor(255, 255, 255, 1)
     const fontSize = 10
@@ -92,14 +96,14 @@ export class Dialog {
       Gine.handle.text(
         m,
         this.x - this.width + 4,
-        this.y + 28 + index * fontSize
+        this.y + 28 + index * fontSize + index * 4
       )
     })
 
     if (this.acknowledgement && this.enterButton) {
       Gine.handle.drawSprite(
         this.enterButton,
-        this.x + this.x - 64,
+        this.x - this.width + this.width - 20,
         this.y + 60
       )
     }

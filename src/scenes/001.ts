@@ -6,12 +6,11 @@ import { Guard } from '../guard'
 import { MOVE, HOLD } from '../task'
 import { Dialog } from '../dialog'
 
-export class MainScene extends Scene {
+export class Scene001 extends Scene {
   player: Player
   guards: Guard[] = []
   map: MapManager
   tiles: { x: number; y: number }
-  alpha: number = 0
   seconds: number = 0
   dialogOn: boolean = false
   constructor() {
@@ -74,9 +73,6 @@ export class MainScene extends Scene {
       this.player.updateTick(delta, false)
     }
     this.guards.forEach(g => g.update(delta))
-    if (!this.player.alive && this.alpha < 0.9) {
-      this.alpha += delta
-    }
     Dialog.handleUpdate(delta)
   }
 
@@ -89,16 +85,8 @@ export class MainScene extends Scene {
       this.player.y,
       this.player.direction
     )
-    if (!this.player.alive) {
-      Gine.handle.setFont(new Font('Helvetica', 40))
-      Gine.handle.setColor(255, 0, 0, this.alpha)
-      Gine.handle.text(
-        'YOU DIED',
-        Gine.CONFIG.width / 2 - 80,
-        Gine.CONFIG.height / 2
-      )
-    }
     Dialog.handleDraw()
+    this.player.checkDead()
     // Gine.handle.draw(this.player.image, this.player.x, this.player.y)
   }
 }
